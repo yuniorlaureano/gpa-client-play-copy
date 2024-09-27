@@ -1,0 +1,71 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver los clientes
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Nombre o Identificación"
+              formControlName="term"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Teléfono</th>
+    <th>Identificación</th>
+    <th>Geolocalizado</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr *ngFor="let client of data.data">
+      <td>{{ client.name + " " + (client.lastName ?? "") }}</td>
+      <td>{{ client.email }}</td>
+      <td>{{ client.phone }}</td>
+      <td>
+        {{ getIdentificationType(client.identificationType) }}
+        {{ client.identification }}
+      </td>
+      <td>{{ client.latitude ? "&#x2705;" : "-" }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(client)"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Eliminar"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(client)"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

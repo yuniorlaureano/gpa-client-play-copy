@@ -1,0 +1,387 @@
+<nav class="sidebar-wrapper">
+  <!-- Sidebar brand starts -->
+  <div class="sidebar-brand">
+    <div class="logo">
+      <h1>GPA</h1>
+    </div>
+  </div>
+  <!-- Sidebar brand starts -->
+
+  <!-- Sidebar menu starts -->
+  <div class="sidebar-menu">
+    <div>
+      <ul>
+        <li>
+          <a
+            routerLink="/"
+            routerLinkActive="current-page"
+            class="sidebar-dropdown active"
+            style="color: #435eef"
+            (click)="handleDasboardSelected()"
+          >
+            <i class="fa-solid fa-house" style="color: #435eef"></i>
+            <span class="menu-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'inventory'">
+          <a (click)="handleMenuSelected('inventory')">
+            <i class="bi bi-list-check"></i>
+            <span class="menu-text">Inventario</span>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'inventory' ? 'block' : 'none'"
+          >
+            <ul>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/product"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Productos')"
+                  ><i class="bi bi-basket2-fill"></i> Productos</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/product/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('List de productos')"
+                  ><i class="fa-solid fa-list-ol"></i> Lista de productos</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/stock/cycle"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Ciclos de inventario')"
+                  ><i class="bi bi-arrow-repeat"></i> Ciclos de inventario</a
+                >
+                <a
+                  routerLink="/inventory/stock/cycle/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Lista ciclos de inventario')"
+                  ><i class="fa-solid fa-list-ol"></i> Lista ciclos de
+                  inventario</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/category"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Categorías')"
+                  ><i class="bi bi-tags"></i> Categorías</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/category/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Lista de categorías')"
+                  ><i class="fa-solid fa-list-ol"></i>Lista de categorías</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/addon"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Agregados')"
+                  ><i class="bi bi-plus-slash-minus"></i>Agregados</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/addon/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="handleSubMenuSelected('Lista de agregados')"
+                  ><i class="fa-solid fa-list-ol"></i>Lista de agregados</a
+                >
+              </li>
+
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/entry"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Entrada')"
+                >
+                  <i class="bi bi-arrow-right"></i>
+                  Entrada</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/output"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Salida')"
+                >
+                  <i class="bi bi-arrow-left"></i> Salida</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/existence/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Existencia')"
+                  ><i class="bi bi-bag-check"></i> Existencia</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/transaction/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Transacciones')"
+                  ><i class="bi bi-arrow-left-right"></i> Transacciones</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/provider"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedor')"
+                >
+                  <i class="fa-solid fa-users"></i>
+                  Proveedor</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/inventory/provider/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Listado de proveedor')"
+                >
+                  <i class="bi bi-person-lines-fill"></i>Lista de proveedor</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'invoice'">
+          <a (click)="handleMenuSelected('invoice')">
+            <i class="bi bi-cash-coin"></i>
+            <span class="menu-text">Facturación</span>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'invoice' ? 'block' : 'none'"
+          >
+            <ul>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/sale"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Venta')"
+                >
+                  <i class="fa-solid fa-file-invoice-dollar"></i> Venta</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/sale/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Lista de ventas')"
+                  ><i class="fa-solid fa-list-ol"></i> Lista de ventas</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/receivable-account-list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Cuentas por cobrar')"
+                >
+                  <i class="bi bi-currency-exchange"></i> Cuentas por cobrar</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/client"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Cliente')"
+                >
+                  <i class="fa-solid fa-users"></i>
+                  Cliente</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/invoice/client/list"
+                  routerLinkActive="current-page"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Listado de clientes')"
+                >
+                  <i class="bi bi-person-lines-fill"></i>Lista de clientes</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'configuration'">
+          <a (click)="handleMenuSelected('configuration')">
+            <i class="bi bi-gear"></i>
+            <span class="menu-text">Configuraciones</span>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'configuration' ? 'block' : 'none'"
+          >
+            <ul>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/integrations"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Integraciones')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-solid fa-plug"></i>Integraciones</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/blobs/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedores de archivos')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-folder-open"></i>Proveedores de
+                  archivos</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/emails/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Proveedores de email')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-envelope"></i>Proveedores de email</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/print-information"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Información de impresión')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="bi bi-building"></i> Información de impresión</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/unit"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Unidades de medida')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-solid fa-scale-unbalanced"></i> Unidades de
+                  medida</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/unit/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Lista de unidades')"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-solid fa-weight-hanging"></i> Lista de
+                  unidades</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  href="#"
+                  routerLink="/general/report-template/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="
+                    handleSubMenuSelected('Lista deTemplates de reportes')
+                  "
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ><i class="fa-regular fa-file-code"></i> Lista deTemplates de
+                  reportes</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="sidebar-dropdown" [class.active]="menu == 'security'">
+          <a (click)="handleMenuSelected('security')">
+            <i class="bi bi-shield-lock"></i>
+            <span class="menu-text">Seguridad</span>
+          </a>
+          <div
+            class="sidebar-submenu"
+            [style.display]="menu == 'security' ? 'block' : 'none'"
+          >
+            <ul>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/auth/users/list"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Usuarios')"
+                  ><i class="fa-solid fa-user-lock"></i>Usuarios</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/auth/users/register"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Registrar usuario')"
+                  ><i class="bi bi-person-video2"></i>Registrar usuario</a
+                >
+              </li>
+              <li routerLinkActive="active">
+                <a
+                  routerLink="/auth/profiles"
+                  routerLinkActive="current-page"
+                  class="menu-item-list"
+                  (click)="handleSubMenuSelected('Perfiles')"
+                  ><i class="bi bi-lock"></i>Perfiles</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- Sidebar menu ends -->
+</nav>

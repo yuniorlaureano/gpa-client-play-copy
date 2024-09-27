@@ -1,0 +1,368 @@
+<div class="right-button">
+  <a
+    routerLink="/inventory/provider/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Lista de proveedores
+  </a>
+  <button
+    type="button"
+    class="btn btn-outline-success btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    *ngIf="!isEdit"
+    [disabled]="!canCreate"
+  >
+    <i class="fa-solid fa-floppy-disk"></i>Guardar
+  </button>
+  <button
+    *ngIf="isEdit"
+    type="button"
+    class="btn btn-outline-warning btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    [disabled]="!canEdit"
+  >
+    <i class="bi bi-pencil-square"></i>
+    Actualizar
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleCancel()"
+    placement="top"
+    ngbTooltip="Limpiar campos"
+  >
+    <i class="bi bi-arrow-clockwise"></i>
+  </button>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <div class="col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header"></div>
+
+      <!--  -->
+      <div class="card-body">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear proveedores
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar proveedores
+        </gpa-no-permission-alert>
+        <!-- Comienza row de sergundo nivel! -->
+        <div class="row">
+          <div class="col-sm-6 col-12 info-container">
+            <!-- Primer grupo del formlario -->
+            <div class="card-border">
+              <div class="card-border-body">
+                <form [formGroup]="providerForm">
+                  <div class="row">
+                    <h4>Información personal</h4>
+                    <!--  -->
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Nombre<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="name"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('name')"
+                          [touched]="providerForm.touched"
+                          validation="required"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('name')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label">Apellido</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="lastName"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('lastName')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Tipo de documento
+                          <span class="text-red">*</span></label
+                        >
+                        <select
+                          class="form-control"
+                          formControlName="identificationType"
+                        >
+                          <option value="1">Cédula</option>
+                          <option value="2">RNC</option>
+                          <option value="3">Pasaporte</option>
+                        </select>
+                        <gpa-validator-message
+                          [control]="providerForm.get('identificationType')"
+                          [touched]="providerForm.touched"
+                          validation="required"
+                          message="Requerido"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Documento de indentidad<span class="text-red"
+                            >*</span
+                          ></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="identification"
+                          [inputMask]="getInputMaskByType()"
+                          [placeholder]="getInputMaskPlaceHolderByType()"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('identification')"
+                          [touched]="providerForm.touched"
+                          validation="required"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('identification')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Teléfono<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="phone"
+                          [inputMask]="phoneMask"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('phone')"
+                          [touched]="providerForm.touched"
+                          validation="required"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('phone')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 15 caracteres"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3 col-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Email<span class="text-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="email"
+                          [inputMask]="emailInputMask"
+                          placeholder="_@_._"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('email')"
+                          [touched]="providerForm.touched"
+                          validation="required"
+                          message="Requerido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('email')"
+                          [touched]="providerForm.touched"
+                          validation="email"
+                          message="Email inválido"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('email')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <hr />
+                    <h5>Dirección de google</h5>
+                    <div class="col-12 col-sm-12 mt-4">
+                      <button
+                        class="btn btn-outline-dark btn-rounded"
+                        type="button"
+                        style="width: 100px"
+                        (click)="showMap()"
+                      >
+                        <i
+                          class="bi bi-geo-alt"
+                          style="font-size: 20px; color: red"
+                        ></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-5 col-5">
+                      <div class="mb-3">
+                        <label class="form-label">Dirección de google</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="formattedAddress"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('formattedAddress')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 256 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label">Latitud</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="longitude"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                      <div class="mb-3">
+                        <label class="form-label">Longitud</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="latitude"
+                        />
+                      </div>
+                    </div>
+
+                    <hr />
+                    <h5>Dirección</h5>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Calle</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="street"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('street')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 100 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Número</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="buildingNumber"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('buildingNumber')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 10 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Ciudad</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="city"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('city')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">País</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="country"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('country')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-3">
+                      <div class="mb-3">
+                        <label class="form-label">Código postal</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="postalCode"
+                        />
+                        <gpa-validator-message
+                          [control]="providerForm.get('postalCode')"
+                          [touched]="providerForm.touched"
+                          validation="maxlength"
+                          message="máximo 50 caracteres"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <gpa-map-google
+        [visible]="mapIsVisible"
+        (onLocationChange)="handleLocationChange($event)"
+        (onClose)="hideMap()"
+        [locations]="locations"
+        searchId="provider-map-search"
+        mapId="provider-map"
+        *ngIf="mapLoaded"
+      />
+    </div>
+  </div>
+</div>

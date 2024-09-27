@@ -1,0 +1,22 @@
+<div class="right-button">
+  <a
+    routerLink="/invoice/receivable-account-list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-currency-exchange"></i> Cuentas por cobrar
+  </a>
+  <a
+    routerLink="/invoice/sale"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva
+  </a>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <gpa-sale-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+  ></gpa-sale-list-table>
+</div>

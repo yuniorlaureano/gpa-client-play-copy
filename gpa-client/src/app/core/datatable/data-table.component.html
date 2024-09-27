@@ -1,0 +1,101 @@
+<div class="card">
+  <div class="card-header">
+    <ng-content select="[search]"></ng-content>
+    <div class="card-title">
+      <ng-content select="[caption]"></ng-content>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="card">
+      <ngx-spinner
+        name="table-spinner"
+        [fullScreen]="false"
+        type="timer"
+        size="medium"
+      ></ngx-spinner>
+      <div class="table-responsive">
+        <table class="table table-bordered invoice-table">
+          <thead>
+            <ng-content select="[header]"></ng-content>
+          </thead>
+          <ng-content select="[body]"></ng-content>
+        </table>
+      </div>
+      <nav aria-label="Page Navigation" style="padding: 5px">
+        <ul style="display: flex">
+          <li style="flex: 1">
+            mostrando {{ options.filteredSize }} de
+            {{ options.count }} registros
+          </li>
+          <li class="page-item">
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              (click)="handleBackwardPage()"
+            >
+              <i class="bi bi-arrow-left"></i>
+            </button>
+          </li>
+          <li class="page-item">
+            <select
+              class="btn btn-outline-dark show-more-drowpdown"
+              (change)="handleSetPageToShow($event)"
+            >
+              <option value="10">mostrar 10</option>
+              <option value="50">mostrar 50</option>
+              <option value="100">mostrar 100</option>
+            </select>
+          </li>
+          <li class="page-item">
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              (click)="handleForwardPage()"
+            >
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="card">
+  <div class="card-header">
+    <ng-content select="[caption]"></ng-content>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <ng-content select="[header]"></ng-content>
+        </thead>
+        <ng-content select="[body]"></ng-content>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer clearfix">
+    <span
+      >mostrando {{ options.filteredSize }} de
+      {{ options.count }} registros</span
+    >
+    <ul class="pagination pagination m-0 float-right">
+      <li class="page-item">
+        <button type="button" class="page-link" (click)="handleBackwardPage()">
+          &laquo;
+        </button>
+      </li>
+      <select class="form-control" (change)="handleSetPageToShow($event)">
+        <option value="10">mostrar 10</option>
+        <option value="50">mostrar 50</option>
+        <option value="100">mostrar 100</option>
+      </select>
+      <li class="page-item">
+        <button type="button" class="page-link" (click)="handleForwardPage()">
+          &raquo;
+        </button>
+      </li>
+    </ul>
+  </div>
+</div> -->

@@ -1,0 +1,25 @@
+<div class="right-button">
+  <a
+    routerLink="/inventory/existence/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Existencia
+  </a>
+  <a
+    routerLink="/inventory/product"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+    placement="left"
+    ngbTooltip="Nuevo producto"
+  >
+    <i class="bi bi-plus-lg"></i> Nuevo producto
+  </a>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <gpa-product-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+    [reloadTable]="reloadTable"
+  ></gpa-product-list-table>
+</div>

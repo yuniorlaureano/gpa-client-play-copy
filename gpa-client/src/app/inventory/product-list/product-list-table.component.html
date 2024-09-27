@@ -1,0 +1,67 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para crear usuarios
+</gpa-no-permission-alert>
+<!-- <div class="row">
+  
+</div> -->
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search>
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por Código, Nombre o Categoría"
+        style="margin-right: 20px; width: 300px"
+        (input)="handleSearch($event)"
+      />
+    </div>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Código</th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Precio</th>
+    <th>Categoría</th>
+    <th>Unidad</th>
+    <th>Tipo</th>
+    <!-- <th></th> -->
+  </tr>
+  <tbody body>
+    <tr *ngFor="let product of data.data">
+      <td>{{ product.code }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.unitValue + " " + product.unit }}</td>
+      <td>{{ getTypeLabel(product.type) }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(product)"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Eliminar"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(product)"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

@@ -1,0 +1,180 @@
+<gpa-no-permission-alert [visible]="!canReadTransactions">
+  No tiene permisos para ver transacciones
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-3 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por proveedor"
+              formControlName="term"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+        <div class="col-sm-2 col-12">
+          <label class="form-label">Estado</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="status"
+          >
+            <option value="-1">Todos</option>
+            <option value="0">Borrador</option>
+            <option value="1">Guardado</option>
+            <option value="2">Cancelado</option>
+          </select>
+        </div>
+        <div class="col-sm-2 col-12">
+          <label class="form-label">Tipo de operación</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="transactionType"
+          >
+            <option value="-1">Todos</option>
+            <option value="0">Entrada</option>
+            <option value="1">Salida</option>
+          </select>
+        </div>
+        <div class="col-sm-3 col-12">
+          <label class="form-label">Motivo</label>
+          <select
+            class="form-control"
+            (change)="handleSearch()"
+            formControlName="reason"
+          >
+            <option value="-1">Todos</option>
+            <option [value]="reason.id" *ngFor="let reason of reasons$ | async">
+              {{ reason.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-4">
+          <div class="mb-3">
+            <label class="form-label">Desde</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #fromDate="ngbDatepicker"
+                formControlName="from"
+                (dateSelect)="handleSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary bi bi-calendar3"
+                (click)="fromDate.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3 col-4">
+          <div class="mb-3">
+            <label class="form-label">Hasta</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #toDate="ngbDatepicker"
+                formControlName="to"
+                (dateSelect)="handleSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary bi bi-calendar3"
+                (click)="toDate.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1 col-1 mt-4" style="padding-top: 3px">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="resetSearchFilter()"
+            placement="top"
+            ngbTooltip="Limpiar campos"
+          >
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: right">
+        <button
+          type="button"
+          class="btn btn-outline-info mb-1"
+          (click)="downloadTransactionReport()"
+          placement="top"
+          ngbTooltip="Exportar a PDF"
+        >
+          <i class="fa-regular fa-file-pdf"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Estado</th>
+    <th>Tipo de operación</th>
+    <th>Fecha</th>
+    <th>Proveedor</th>
+    <th>Motivo</th>
+    <th>Descripción</th>
+    <th>Realizada por</th>
+    <th>Actualizada por</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr
+      *ngFor="let stock of data.data"
+      [class.input]="stock.transactionType == 0"
+      [class.output]="stock.transactionType == 1"
+    >
+      <td
+        [class.draft]="stock.status == 0"
+        [class.saved]="stock.status == 1"
+        [class.cancel]="stock.status == 2"
+      >
+        {{ getStatusDescription(stock.status) }}
+      </td>
+      <td>{{ stock.transactionType == 0 ? "Entrada" : "Salida" }}</td>
+      <td>{{ stock.date | date : "dd/MM/yyyy" }}</td>
+      <td>{{ stock.providerName }}</td>
+      <td>{{ stock.reasonName }}</td>
+      <td>{{ stock.description }}</td>
+      <td>{{ stock.createdByName }}</td>
+      <td>{{ stock.updatedByName }}</td>
+      <td style="width: 100px">
+        <!-- <button class="btn btn-danger btn-icon" (click)="handleDelete(stock)">
+          <i class="bi bi-trash"></i>
+        </button> -->
+        <!-- btn btn-outline-danger btn-rounded -->
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(stock)"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

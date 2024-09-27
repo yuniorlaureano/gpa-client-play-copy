@@ -1,0 +1,41 @@
+div.card {
+  position: relative;
+}
+
+.product-catalog {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background-color: white;
+}
+
+.quantity-error {
+  border: solid 1px red;
+}
+
+.credit-sale-type {
+  color: red;
+}
+
+.debit {
+  color: red;
+}
+
+.credit {
+  color: green;
+}
+
+.payment-container {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+.payment-container p,
+input {
+  font-size: 17px !important;
+}

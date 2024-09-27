@@ -1,0 +1,36 @@
+<div class="right-button">
+  <a
+    routerLink="/inventory/product/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Productos
+  </a>
+  <a
+    routerLink="/inventory/transaction/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-list"></i> Transaccioens
+  </a>
+  <a
+    routerLink="/inventory/entry"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva entrada
+  </a>
+  <a
+    routerLink="/inventory/output"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva salida
+  </a>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <gpa-existence-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+  ></gpa-existence-list-table>
+</div>

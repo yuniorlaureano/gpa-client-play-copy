@@ -1,0 +1,87 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver usuarios
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search>
+    <div class="row">
+      <div class="col-4 col-sm-4">
+        <select class="form-control" (change)="handleSearch($event, 'invited')">
+          <option value="-1">Por invitación</option>
+          <option value="1">Invitado</option>
+          <option value="0">No invitado</option>
+        </select>
+      </div>
+      <div class="col-4 col-sm-4">
+        <select class="form-control" (change)="handleSearch($event, 'confirm')">
+          <option value="-1">Por confirmado</option>
+          <option value="1">Confirmado</option>
+          <option value="0">No confirmado</option>
+        </select>
+      </div>
+      <div class="col-4 col-sm-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por Nombre, Email o Usuario"
+          style="width: 300px"
+          (input)="handleSearch($event, 'term')"
+        />
+      </div>
+    </div>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Usuario</th>
+    <th>Invitado</th>
+    <th>Confirmado</th>
+    <th></th>
+  </tr>
+  <tbody body *ngIf="canRead">
+    <tr *ngFor="let user of data.data" [class.bg-info]="user.currentUser">
+      <td>{{ user.firstName + " " + user.lastName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.userName }}</td>
+      <td>{{ user.invited ? "&#x2705;" : "-" }}</td>
+      <td>{{ user.emailConfirmed ? "&#x2705;" : "-" }}</td>
+      <td style="width: 110px">
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(user)"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Desactivar"
+          *ngIf="!user.deleted && !user.currentUser"
+        >
+          <i class="fa-solid fa-user-xmark"></i>
+        </button>
+        <button
+          class="btn btn-outline-success btn-icon"
+          (click)="handleEnable(user)"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Activar"
+          *ngIf="user.deleted && !user.currentUser"
+        >
+          <i class="fa-solid fa-user-check"></i>
+        </button>
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(user)"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+          *ngIf="!user.currentUser"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

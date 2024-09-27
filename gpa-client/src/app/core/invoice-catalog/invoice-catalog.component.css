@@ -1,0 +1,22 @@
+div.card {
+  position: relative;
+}
+
+.invoice-catalog {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background-color: white;
+}
+
+.invoice-catalog tbody tr {
+  cursor: pointer;
+}
+
+.selected-invoice {
+  background-color: lightblue;
+}

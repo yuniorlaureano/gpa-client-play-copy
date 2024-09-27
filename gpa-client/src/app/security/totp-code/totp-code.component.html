@@ -1,0 +1,37 @@
+<form [formGroup]="resetForm" (ngSubmit)="sendCode()">
+  <div class="login-box">
+    <div class="login-form">
+      <a href="index.html" class="login-logo">
+        <!-- <img src="assets/images/logo.svg" alt="Vico Admin" /> -->
+        <h1>GPA</h1>
+      </a>
+      <div class="login-welcome">
+        Debe ingresar su correo para recibir un código de verificación, para
+        cambiar su contraseña.
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="errors.length">
+        <ul>
+          <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Correo</label>
+        <input type="text" class="form-control" formControlName="email" />
+      </div>
+      <div class="login-form-actions">
+        <button type="submit" class="btn">
+          <span class="icon"> <i class="bi bi-envelope"></i></span>
+          Enviar código
+        </button>
+      </div>
+      <div class="login-form-footer">
+        <!-- <div class="additional-link">
+          No tiene una cuenta? <a routerLink="/auth/register"> Registrarse</a>
+        </div> -->
+        <div class="additional-link">
+          Ya tiene una cuenta? <a routerLink="/auth/login"> ENTRAR</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,18 @@
+<div class="right-button">
+  <a
+    routerLink="/general/print-information"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+    placement="left"
+    ngbTooltip="Agregar información de impresión"
+  >
+    <i class="bi bi-plus-lg"></i>
+  </a>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <gpa-print-information-list-table
+    (onDelete)="handleDelete($event)"
+    (onEdit)="handleEdit($event)"
+    [reloadTable]="reloadTable"
+  ></gpa-print-information-list-table>
+</div>

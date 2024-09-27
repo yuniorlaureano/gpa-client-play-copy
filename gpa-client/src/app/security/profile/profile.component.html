@@ -1,0 +1,95 @@
+<div style="position: relative">
+  <div class="card">
+    <div class="card-header">
+      <h4>{{ isEdit ? "Editando perfil" : "Agregando perfil" }}</h4>
+    </div>
+    <!--  -->
+    <div class="card-body">
+      <!-- Comienza row de sergundo nivel! -->
+      <div class="row">
+        <form [formGroup]="profileForm" class="row">
+          <div class="col-sm-12">
+            <label for="status" class="form-label">Perfil a registrar</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="name"
+                [readonly]="!canCreate"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="onSubmit()"
+                [disabled]="!canCreate"
+              >
+                <i class="fa-solid fa-floppy-disk"></i>Guardar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-dark btn-rounded"
+                (click)="handleCancel()"
+                placement="top"
+                ngbTooltip="Limpiar campos"
+              >
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+            <gpa-validator-message
+              [control]="profileForm.get('name')"
+              [touched]="profileForm.touched"
+              validation="required"
+              message="Requerido"
+            />
+            <gpa-validator-message
+              [control]="profileForm.get('name')"
+              [touched]="profileForm.touched"
+              validation="maxlength"
+              message="Tamaño máximo 100"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <gpa-no-permission-alert [visible]="!canRead">
+          No tiene permisos para ver los perfiles
+        </gpa-no-permission-alert>
+        <div class="card" *ngIf="canRead">
+          <ngx-spinner
+            name="profile-spinner"
+            [fullScreen]="false"
+            type="timer"
+            size="medium"
+          ></ngx-spinner>
+          <h4>Lista de perfiles</h4>
+          <gpa-profile-list
+            [reloadTable]="reloadTable"
+            (onDelete)="handleDelete($event)"
+            (onEdit)="handleEdit($event)"
+            (onView)="handleView($event)"
+            (onAddUser)="handleAddUser($event)"
+            [canEdit]="canEdit"
+            [canDelete]="canDelete"
+            [canAssignUser]="canAssignUser"
+            [canUnAssignUser]="canUnAssignUser"
+          ></gpa-profile-list>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <gpa-profile-user-catalog
+    [(visible)]="isProfileUserCatalogVisible"
+    (onAdd)="handdleUserAdded($event)"
+    (onRemove)="handdleUserRemoved($event)"
+    [selectedProfile]="selectedProfile"
+    [reloadTable]="reloadProfileUserTable"
+    [canAssignUser]="canAssignUser"
+    [canUnAssignUser]="canUnAssignUser"
+  ></gpa-profile-user-catalog>
+</div>

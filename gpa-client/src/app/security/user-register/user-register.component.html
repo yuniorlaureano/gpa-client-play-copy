@@ -1,0 +1,287 @@
+<div class="right-button">
+  <a
+    routerLink="/auth/users/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+    placement="top"
+    ngbTooltip="Lista de usuarios"
+  >
+    <i class="bi bi-card-list"></i> Usuarios
+  </a>
+  <button
+    type="button"
+    class="btn btn-outline-success btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    *ngIf="!isEdit"
+    [disabled]="!canCreate"
+  >
+    <i class="fa-solid fa-floppy-disk"></i>Guardar
+  </button>
+
+  <button
+    *ngIf="isEdit"
+    type="button"
+    class="btn btn-outline-warning btn-rounded"
+    style="margin-right: 5px"
+    (click)="onSubmit()"
+    [disabled]="!canEdit"
+  >
+    <i class="bi bi-pencil-square"></i>
+    Actualizar
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleCancel()"
+    placement="top"
+    ngbTooltip="Limpiar campos"
+  >
+    <i class="bi bi-arrow-clockwise"></i>
+  </button>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <div class="card">
+    <div class="card-header"></div>
+    <!--  -->
+    <div class="card-body">
+      <!-- Comienza row de sergundo nivel! -->
+      <div class="row">
+        <gpa-no-permission-alert [visible]="!canCreate">
+          No tiene permisos para crear usuarios
+        </gpa-no-permission-alert>
+        <gpa-no-permission-alert [visible]="isEdit && !canEdit">
+          No tiene permisos para modificar usuarios
+        </gpa-no-permission-alert>
+        <ngb-alert
+          [dismissible]="false"
+          type="danger"
+          class="alert"
+          *ngIf="!invited && isEdit"
+          style="margin-top: 5px"
+        >
+          El usuario no ha sido invitado.
+        </ngb-alert>
+        <ngb-alert
+          [dismissible]="false"
+          type="danger"
+          class="alert"
+          *ngIf="disabled && isEdit"
+          style="margin-top: 5px"
+        >
+          El usuario ha sido deshabilitado.
+        </ngb-alert>
+        <form [formGroup]="userForm" class="row">
+          <div class="col-sm-2 col-12">
+            <gpa-no-permission-alert [visible]="!uploadPhoto">
+              No tiene permisos para subir foto
+            </gpa-no-permission-alert>
+            <img
+              [src]="this.imageUrl"
+              class="img-thumbnail image-upload-product"
+              (click)="fileUpload.click()"
+              *ngIf="uploadPhoto"
+            />
+            <input
+              type="file"
+              style="display: none"
+              #fileUpload
+              (change)="processFileUpload($event)"
+            />
+          </div>
+          <!--  -->
+
+          <div class="col-sm-10">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="mb-3">
+                  <label class="form-label"
+                    >Email<span class="text-red">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="email"
+                    [inputMask]="emailInputMask"
+                    placeholder="_@_._"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="required"
+                    message="Requerido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="email"
+                    message="Email inválido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('email')"
+                    [touched]="userForm.touched"
+                    validation="maxlength"
+                    message="Tamaño máximo 254"
+                  />
+                </div>
+              </div>
+              <!--  -->
+              <div class="col-sm-12">
+                <div class="mb-3">
+                  <label class="form-label"
+                    >Nombre de usuario<span class="text-red">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="userName"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('userName')"
+                    [touched]="userForm.touched"
+                    validation="required"
+                    message="Requerido"
+                  />
+                  <gpa-validator-message
+                    [control]="userForm.get('userName')"
+                    [touched]="userForm.touched"
+                    validation="maxlength"
+                    message="Tamaño máximo 30"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="mb-3">
+              <label class="form-label"
+                >Nombre<span class="text-red">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('firstName')"
+                [touched]="userForm.touched"
+                validation="required"
+                message="Requerido"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('firstName')"
+                [touched]="userForm.touched"
+                validation="maxlength"
+                message="Tamaño máximo 100"
+              />
+            </div>
+          </div>
+          <!--  -->
+          <div class="col-sm-6">
+            <div class="mb-3">
+              <label class="form-label"
+                >Apellido<span class="text-red">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('lastName')"
+                [touched]="userForm.touched"
+                validation="required"
+                message="Requerido"
+              />
+              <gpa-validator-message
+                [control]="userForm.get('lastName')"
+                [touched]="userForm.touched"
+                validation="maxlength"
+                message="Tamaño máximo 100"
+              />
+            </div>
+          </div>
+        </form>
+        <div
+          class="col-12 col-sm-12"
+          style="border: solid 1px lightgray; padding: 5px"
+        >
+          <h5>Perfiles</h5>
+          <ol>
+            <li *ngFor="let profile of profiles">{{ profile.name }}</li>
+          </ol>
+        </div>
+      </div>
+      <hr />
+      <div class="row" *ngIf="!disabled && !confirmed">
+        <div class="col-sm-12">
+          <h4>Invitar usuario como</h4>
+          <ul>
+            <li *ngFor="let profile of profilesForInvitation?.data">
+              <div>
+                <span
+                  style="
+                    margin-right: 5px;
+                    display: inline-block;
+                    border: solid 1px lightgray;
+                    padding: 8px;
+                    text-transform: capitalize;
+                  "
+                  >{{ profile.name }}</span
+                ><button
+                  type="button"
+                  class="btn btn-outline-dark"
+                  style="margin-right: 5px"
+                  (click)="inviteUser(profile.id!)"
+                  *ngIf="isEdit"
+                  [disabled]="!canEdit"
+                  placement="top"
+                  ngbTooltip="Enviar invitación al usuario"
+                >
+                  <i class="fa-solid fa-envelope-open-text"></i> Invitar
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="invitations$ | async as invitations">
+        <div class="col-sm-12">
+          <h4>Invitaciones</h4>
+          <table class="table">
+            <tr>
+              <th>Redimida</th>
+              <th>Revocada</th>
+              <th>Expiración</th>
+              <th>Enviada por</th>
+              <th>Revocada por</th>
+              <th>Fecha revocación</th>
+              <th></th>
+            </tr>
+            <tr *ngFor="let item of invitations">
+              <td>{{ item.redeemed ? "&#x2705;" : "-" }}</td>
+              <td>{{ item.revoked ? "&#x2705;" : "-" }}</td>
+              <td>{{ item.expiration | date }}</td>
+              <td>{{ item.createdByName }}</td>
+              <td>{{ item.revokedByName }}</td>
+              <td>{{ item.revokedAt | date }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-outline-dark"
+                  (click)="revokeUser(item.id!)"
+                  *ngIf="!item.revoked && !item.redeemed"
+                  placement="top"
+                  ngbTooltip="Revocar invitación"
+                >
+                  Revocar
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

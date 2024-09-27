@@ -1,0 +1,204 @@
+<div class="right-button">
+  <a
+    routerLink="/invoice/receivable-account-list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-cash-coin"></i> Cuentas por cobrar
+  </a>
+  <a
+    routerLink="/invoice/sale/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Facturas
+  </a>
+  <button
+    type="button"
+    class="btn btn-outline-primary btn-rounded"
+    style="margin-right: 5px"
+    (click)="handleSave()"
+    [disabled]="!canEdit"
+    *ngIf="invoice?.paymentStatus == 1"
+  >
+    <i class="fa-solid fa-floppy-disk"></i>Guardar
+  </button>
+</div>
+<div class="card" style="margin-top: 50px">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-3 col-3">
+        <a
+          style="color: rgba(13, 110, 253)"
+          routerLink="{{ '/invoice/sale/edit/' + invoice?.invoiceId }}"
+          ><i class="bi bi-receipt" style="font-size: 50px"></i>
+          <span style="font-size: 40px">Factura</span></a
+        >
+        <div>
+          <ul>
+            <li>
+              <span class="client-profile">Estado:</span>
+              {{ getStatusDescription(invoice?.invoiceStatus) }}
+            </li>
+            <li>
+              <span class="client-profile">Tipo:</span>
+              {{ invoice?.saleType == 0 ? "A crédito" : "Al contado" }}
+            </li>
+            <li>
+              <span class="client-profile">Tipo:</span>
+              <a
+                style="color: rgba(13, 110, 253)"
+                [routerLink]="'/invoice/sale/edit/' + invoice?.invoiceId"
+              >
+                {{ invoice?.invoiceCode }}
+              </a>
+            </li>
+            <li>
+              <span class="client-profile">Fecha:</span>
+              {{ invoice?.date | date }}
+            </li>
+            <li>
+              <span class="client-profile">Nota:</span>
+              {{ invoice?.invoiceNote }}
+            </li>
+            <li>
+              <span class="client-profile">Pago inicial:</span>
+              {{ invoice?.payment | currency }}
+            </li>
+            <li
+              [class.payment_status_paid]="invoice?.paymentStatus == 0"
+              [class.payment_status_pending]="invoice?.paymentStatus == 1"
+            >
+              <span class="client-profile">Estado:</span>
+              {{ getPaymentStatusDescription(invoice?.paymentStatus) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-3 col-3">
+        <a
+          style="color: rgba(13, 110, 253)"
+          routerLink="{{ '/invoice/client/edit/' + invoice?.clientId }}"
+        >
+          <i class="bi bi-person" style="font-size: 50px"></i>
+          <span style="font-size: 40px">Cliente</span></a
+        >
+        <div>
+          <ul>
+            <li>
+              <span class="client-profile">Cliente:</span>
+              {{ invoice?.clientName }}
+            </li>
+            <li>
+              <span class="client-profile">Email:</span>
+              {{ invoice?.clientEmail }}
+            </li>
+            <li>
+              <span class="client-profile">Teléfono:</span>
+              {{ invoice?.clientPhone }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12">
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="receivableForm"
+          *ngIf="invoice?.paymentStatus == 1"
+        >
+          <div class="col-sm-3">
+            <div class="mb-3">
+              <label for="date" class="form-label"
+                ><span class="text-danger require-sign">*</span>Pago
+                pediente</label
+              >
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="0.00"
+                  disabled
+                  [value]="invoice?.pendingPayment?.pendingPayment"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="mb-3">
+              <label for="payment" class="form-label"
+                ><span class="text-danger require-sign">*</span>Pago</label
+              >
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="payment"
+                  [inputMask]="currencyInputMask"
+                  placeholder="$ 0.00"
+                />
+              </div>
+              <gpa-validator-message
+                [control]="receivableForm.get('payment')"
+                [touched]="receivableForm.touched"
+                validation="required"
+                message="El pago es obligatorio"
+              />
+              <gpa-validator-message
+                [control]="receivableForm.get('payment')"
+                [touched]="receivableForm.touched"
+                validation="min"
+                message="El pago debe ser mayor a 0"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-sm-12">
+            <div class="mb-3">
+              <label for="note" class="form-label">Nota</label>
+              <textarea
+                id="note"
+                class="form-control"
+                formControlName="note"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <hr />
+      <div class="col-12 col-sm-12">
+        <gpa-no-permission-alert [visible]="!canRead">
+          No tiene permisos para ver las cuentas por cobrar
+        </gpa-no-permission-alert>
+        <h4>Historial de pagos</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Pago pendiente</th>
+              <th>Pagado</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let account of invoice?.receivableAccounts"
+              [class.row_paid]="account.payment != 0"
+            >
+              <td>{{ account.pendingPayment | currency }}</td>
+              <td>{{ account.payment | currency }}</td>
+              <td>{{ account.date | date }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-success"
+                  [disabled]="!canEdit"
+                  (click)="printProofOfPayment(account.id)"
+                >
+                  <i class="fa-solid fa-print"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,215 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver el dashboard
+</gpa-no-permission-alert>
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+      <div class="sale-details">
+        <h5>
+          <a
+            routerLink="/inventory/product/list"
+            routerLinkActive="router-link-active"
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Productos terminado inventario</a
+          >
+        </h5>
+        <h3 class="text-blue">{{ finishedProductCount }}</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="fa-solid fa-toolbox"></i>
+      </div>
+      <div class="sale-details">
+        <h5>
+          <a
+            routerLink="/inventory/product/list"
+            routerLinkActive="router-link-active"
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Materia prima inventario</a
+          >
+        </h5>
+        <h3 class="text-blue">{{ rawProductCount }}</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr green">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="sale-details">
+        <ngx-spinner
+          [fullScreen]="false"
+          name="client-spinner"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+        <h5>
+          <a
+            routerLink="/invoice/client/list"
+            routerLinkActive="router-link-active"
+            class="gpa-link"
+          >
+            <i class="fa-solid fa-link"></i> Clientes</a
+          >
+        </h5>
+        <h3 class="text-green">{{ clientsCount }}</h3>
+        <p class="growth text-blue">Cantidad</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-6 col-12">
+    <div class="stats-tile">
+      <div class="sale-icon-bdr">
+        <i class="fa-solid fa-dollar-sign"></i>
+      </div>
+      <div class="sale-details">
+        <ngx-spinner
+          [fullScreen]="false"
+          name="revenue-spinner"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+
+        <h5>
+          <a
+            routerLink="/invoice/sale/list"
+            routerLinkActive="router-link-active"
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Ventas</a
+          >
+        </h5>
+        <h3 class="text-blue">{{ revenues | currency }}</h3>
+        <div style="display: flex">
+          <p class="growth text-blue" style="margin-right: 5px">Ganacias</p>
+          <select
+            style="
+              border: 1px solid #e7eaec;
+              background-color: #ffffff;
+              border-radius: 4px;
+              color: #232629;
+            "
+            [value]="getCurrentMonth()"
+            (change)="handleMonthChange($event)"
+          >
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->
+
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-9 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" style="display: flex; gap: 4px">
+          <select class="form-control" (change)="handleReasonChange($event)">
+            <option value="-1" style="font-weight: bold">Razón</option>
+            <option value="1">Compra</option>
+            <option value="2">Venta</option>
+            <option value="3">Devolución</option>
+            <option value="4" selected>Manufacturado</option>
+            <option value="5">Dañados</option>
+            <option value="6">Expirados</option>
+            <option value="7">Materia prima</option>
+            <option value="8">Cancelación de salia</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <ngx-spinner
+          [fullScreen]="false"
+          name="transaction-spinner"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+        <apx-chart
+          [series]="monthlyChartOptions.series!"
+          [chart]="monthlyChartOptions.chart!"
+          [xaxis]="monthlyChartOptions.xaxis!"
+          [title]="monthlyChartOptions.title!"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <a
+            routerLink="/inventory/existence/list"
+            routerLinkActive="router-link-active"
+            class="gpa-link"
+            ><i class="fa-solid fa-link"></i> Entrada vs Salida vs Existencia</a
+          >
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-height-xl auto-align-graph">
+          <apx-chart
+            [series]="inputOutputExistenceCartOptions.series!"
+            [chart]="inputOutputExistenceCartOptions.chart!"
+            [labels]="inputOutputExistenceCartOptions.labels!"
+            [title]="inputOutputExistenceCartOptions.title!"
+            [colors]="inputOutputExistenceCartOptions.colors!"
+            [stroke]="inputOutputExistenceCartOptions.stroke!"
+            [tooltip]="inputOutputExistenceCartOptions.tooltip!"
+            [legend]="inputOutputExistenceCartOptions.legend"
+            [dataLabels]="inputOutputExistenceCartOptions.dataLabels"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Row end -->
+
+<!-- Row start -->
+<div class="row">
+  <div class="col-xxl-12 col-sm-12 col-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Clientes</div>
+      </div>
+      <div class="card-body" style="position: relative">
+        <gpa-dashboard-client-map
+          (onSearchClient)="showClientCatalog()"
+          [clientMarkers]="selectedClientesData"
+          searchId="dasboard-client-map-search"
+          mapId="dasboard-client-map"
+          *ngIf="mapLoaded"
+        />
+        <gpa-client-catalog
+          [(visible)]="isClientCatalogVisible"
+          (onSelectedClient)="handleSelectedClient($event)"
+          [selectedClientes]="selectedClientes"
+          (visibleChange)="handleHideClientCatalog()"
+        ></gpa-client-catalog>
+      </div>
+    </div>
+  </div>
+</div>

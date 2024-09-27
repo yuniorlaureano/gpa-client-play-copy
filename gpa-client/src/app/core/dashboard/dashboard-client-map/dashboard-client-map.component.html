@@ -1,0 +1,47 @@
+<div class="map-google">
+  <ngx-spinner
+    name="map-google-spinner"
+    [fullScreen]="false"
+    type="timer"
+    size="medium"
+  ></ngx-spinner>
+  <div class="row">
+    <div>
+      <button
+        type="button"
+        class="btn btn-info mb-1"
+        (click)="handleSearchClient()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i> Buscar cliente
+      </button>
+    </div>
+    <div class="search-holder col-12 col-sm-12 mb-2">
+      <input
+        [id]="searchId"
+        type="text"
+        class="form-control"
+        placeholder="Buscar lugares"
+      />
+    </div>
+  </div>
+  <google-map
+    width="100%"
+    height="600px"
+    [center]="center"
+    [zoom]="zoom"
+    [mapId]="mapId"
+    (mapClick)="mapClick($event)"
+  >
+    <map-marker
+      *ngFor="let client of transformedMarkers"
+      [position]="client.position"
+      [label]="{
+        text: client.name,
+        color: '#0000FF',
+        fontSize: '16px',
+      }"
+      [title]="client.name"
+      [icon]="markerIcon1"
+    />
+  </google-map>
+</div>

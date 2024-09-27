@@ -1,0 +1,59 @@
+<gpa-no-permission-alert [visible]="!canRead">
+  No tiene permisos para ver cuentas por cobrar
+</gpa-no-permission-alert>
+<gpa-data-table
+  [onSetPageToShow]="handleSetPageToShow"
+  [options]="data.options"
+  [onForwardPage]="handleForwardPage"
+  [onBackwardPage]="handleBackwardPage"
+>
+  <div search style="width: 100%">
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-sm-3 col-12">
+          <label class="form-label" style="margin-bottom: 23px"></label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por cliente"
+              formControlName="term"
+              (input)="handleSearch()"
+              style="margin-right: 2px; width: 100px"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <h3 class="card-title" caption></h3>
+  <tr header>
+    <th>Cliente</th>
+    <th>Pago pendiente</th>
+    <th>Pagado</th>
+    <th></th>
+  </tr>
+  <tbody body>
+    <tr
+      *ngFor="let receivable of data.data"
+      [class.text-danger]="isPedding(receivable)"
+      [class.text-success]="!isPedding(receivable)"
+    >
+      <td><i class="bi bi-person"></i> {{ receivable.client }}</td>
+      <td>{{ receivable.pendingPayment - receivable.payment | currency }}</td>
+      <td>{{ receivable.payment | currency }}</td>
+      <td style="width: 100px">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(receivable)"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</gpa-data-table>

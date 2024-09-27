@@ -1,0 +1,103 @@
+<div search>
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar"
+      style=""
+      (input)="handleSearch($event)"
+    />
+  </div>
+</div>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let profile of data.data">
+    <div class="row">
+      <div class="col-sm-8">{{ profile?.name }}</div>
+      <div class="col-sm-4">
+        <button
+          class="btn btn-outline-warning btn-icon"
+          (click)="handleEdit(profile)"
+          *ngIf="profile?.name != 'administrador'"
+          [disabled]="!canEdit"
+          placement="top"
+          ngbTooltip="Editar"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button
+          class="btn btn-outline-danger btn-icon"
+          (click)="handleDelete(profile)"
+          *ngIf="profile?.name != 'administrador'"
+          [disabled]="!canDelete"
+          placement="top"
+          ngbTooltip="Borrar"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <a
+          routerLink="/auth/profiles/permissions/{{ profile.id }}"
+          class="btn btn-outline-primary btn-icon"
+          *ngIf="profile?.name != 'administrador'"
+          placement="top"
+          ngbTooltip="Agregar permisos"
+        >
+          <i class="fa-solid fa-thumbtack"></i>
+        </a>
+        <button
+          class="btn btn-outline-sucess btn-icon"
+          (click)="handleView(profile)"
+          placement="top"
+          ngbTooltip="Ver permisos"
+        >
+          <i class="bi bi-eye"></i>
+        </button>
+        <button
+          class="btn btn-outline-info btn-icon"
+          (click)="handleAddUser(profile)"
+          [disabled]="!canAssignUser && !canUnAssignUser"
+          placement="top"
+          ngbTooltip="Asignar usuario"
+        >
+          <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>
+<nav aria-label="Page Navigation" style="padding: 10px">
+  <ul style="display: flex">
+    <li style="flex: 1">
+      mostrando {{ data.options.filteredSize }} de
+      {{ data.options.count }} registros
+    </li>
+    <li class="page-item">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="handleBackwardPage()"
+      >
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </li>
+    <li class="page-item">
+      <select
+        class="btn btn-outline-dark show-more-drowpdown"
+        (change)="handleSetPageToShow($event)"
+      >
+        <option value="10">mostrar 10</option>
+        <option value="50">mostrar 50</option>
+        <option value="100">mostrar 100</option>
+      </select>
+    </li>
+    <li class="page-item">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="handleForwardPage()"
+      >
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </li>
+  </ul>
+</nav>

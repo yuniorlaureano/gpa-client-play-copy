@@ -1,0 +1,387 @@
+<div class="right-button">
+  <a
+    routerLink="/invoice/sale/list"
+    class="btn btn-outline-info btn-rounded"
+    style="margin-right: 5px"
+  >
+    <i class="bi bi-card-list"></i> Facturas
+  </a>
+
+  <button
+    type="button"
+    class="btn btn-outline-danger btn-rounded"
+    *ngIf="showReturn()"
+    style="margin-right: 5px"
+    (click)="handleCancelInvoice()"
+    [disabled]="!canReturn"
+  >
+    <i class="bi bi-arrow-counterclockwise"></i>
+    Devolución
+  </button>
+
+  <button
+    *ngIf="!isEdit || isDraft()"
+    type="button"
+    class="btn btn-rounded"
+    [class.btn-outline-warning]="isEdit"
+    [class.btn-outline-success]="!isEdit"
+    style="margin-right: 5px"
+    (click)="save()"
+    [disabled]="!canEdit"
+  >
+    <i
+      class="bi"
+      [class.bi-pencil-square]="isEdit"
+      [class.bi-cart-check]="!isEdit"
+    ></i>
+    {{ isEdit ? "Completar" : "Completar" }}
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-secondary btn-rounded"
+    *ngIf="!isEdit || isDraft()"
+    style="margin-right: 5px"
+    (click)="saveAsDraft()"
+    [disabled]="!canCreate"
+  >
+    <i class="fa-solid fa-database"></i>
+    Guardar como borrador
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="handleNew()"
+  >
+    <i class="bi bi-plus-lg"></i> Nueva
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="printInvoice()"
+    *ngIf="isEdit"
+  >
+    <i class="bi bi-printer"></i> Imprimir factura
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-dark btn-rounded"
+    (click)="printProofOfPayment()"
+    *ngIf="isEdit && isPaid()"
+  >
+    <i class="bi bi-printer"></i> Imprimir comprobante
+  </button>
+</div>
+<div style="margin-top: 50px" class="card-content-container">
+  <div class="col-sm-12 col-12">
+    <!-- Card start -->
+    <div class="card">
+      <div class="card-body">
+        <!-- Row start -->
+        <form
+          class="row row-cols-sm-auto"
+          [formGroup]="saleForm"
+          #form="ngForm"
+        >
+          <div class="col-6 col-sm-6">
+            <span class="text-danger require-sign">*</span>
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              (click)="handleShowClientCatalog(true)"
+              [disabled]="disableForm"
+            >
+              <i class="bi bi-person-plus"></i>
+              Cliente
+            </button>
+            <gpa-validator-message
+              [control]="saleForm.get('clientId')"
+              [touched]="saleForm.touched"
+              validation="required"
+              message="El cliente es obligatorio"
+            />
+          </div>
+          <div class="col-12 col-sm-12" *ngIf="client">
+            <blockquote>
+              <p>
+                <span style="font-weight: 700">Nombre:</span>
+                {{ client.name }} {{ client.lastName }}
+              </p>
+              <p>
+                <span style="font-weight: 700">Crédito:</span>
+                {{ clientFees.credit | currency }}
+              </p>
+              <div *ngIf="clientFees.debit">
+                <p>
+                  <span style="font-weight: 700">Débito:</span>
+                  {{ clientFees.debit | currency }}
+                </p>
+                <h5>Cuentas por cobrar</h5>
+                <ol>
+                  <li
+                    *ngFor="let cl of client.debits"
+                    style="border-bottom: solid 1px lightgray; max-width: 400px"
+                  >
+                    <a
+                      style="color: rgba(13, 110, 253)"
+                      routerLink="{{
+                        '/invoice/receivable-account/invoice/' + cl.invoiceId
+                      }}"
+                      ><i class="bi bi-link"></i> Cuenta por cobrar</a
+                    >
+                    |
+                    <span style="margin-left: 5px">{{
+                      cl.pendingPayment | currency
+                    }}</span>
+                    <span style="margin-left: 5px">{{
+                      cl.invoiceId != invoiceId ? " | De otra factura" : ""
+                    }}</span>
+                  </li>
+                </ol>
+              </div>
+            </blockquote>
+          </div>
+          <div class="col-12 col-sm-12">
+            <hr />
+          </div>
+          <div class="col-sm-12" *ngIf="isEdit">
+            <label for="status" class="form-label" style="font-weight: bold"
+              >Estado:
+            </label>
+            {{ getStatusDescription() }}
+          </div>
+          <div class="col-sm-12" *ngIf="this.createdByName">
+            <label for="status" class="form-label" style="font-weight: bold"
+              >Realizada por:
+            </label>
+            {{ this.createdByName }}
+          </div>
+          <div class="col-sm-12" *ngIf="this.updatedByName">
+            <label for="status" class="form-label" style="font-weight: bold"
+              >Actualizada por:
+            </label>
+            {{ this.updatedByName }}
+          </div>
+          <div class="col-12 col-sm-12 card mt-3">
+            <div class="mb-3 card-body" style="border: solid 1px lightgray">
+              <ngx-spinner
+                name="invoice-file-spinner"
+                [fullScreen]="false"
+                type="timer"
+                size="medium"
+              ></ngx-spinner>
+              <label for="inputCompanyName" class="form-label">Adjuntos</label>
+              <input
+                type="file"
+                multiple
+                class="form-control"
+                #invoiceInputFile
+                (change)="processFileUpload($event)"
+              />
+              <ul style="margin-left: 10px">
+                <li *ngFor="let item of attachments">
+                  <a
+                    style="color: rgba(13, 110, 253); cursor: pointer"
+                    (click)="
+                      downloadAttachment(
+                        item.id,
+                        item.deserializedFile?.name ?? 'attachment'
+                      )
+                    "
+                  >
+                    <i
+                      class="bi bi-cloud-arrow-down"
+                      style="font-size: 20px"
+                    ></i>
+                    {{ item.deserializedFile?.name }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-12 col-sm-12">
+            <div class="mb-3">
+              <label for="note" class="form-label">Nota</label>
+              <textarea
+                id="note"
+                formControlName="note"
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+          <h6 [class.credit-sale-type]="saleType == 0">
+            {{ saleType == 1 ? "Venta al contado" : "Venta a crédito" }}
+          </h6>
+          <div
+            class="alert alert-danger col-12 col-sm-12"
+            role="alert"
+            *ngIf="productCatalogAggregate.outOfCredit"
+          >
+            <ul>
+              <li>No tiene crédito suficiente.</li>
+              <li>Crédito disponible: {{ clientFees.credit }}</li>
+              <li>
+                Débito: {{ productCatalogAggregate.netTotalPrice - payment }}
+              </li>
+            </ul>
+          </div>
+          <div
+            class="col-sm-12"
+            style="display: flex; flex-direction: column; align-items: end"
+          >
+            <button
+              class="btn btn-outline-primary"
+              style="margin-top: 10px"
+              type="button"
+              (click)="handleShowProductCatalog(true)"
+              [disabled]="disableForm"
+            >
+              <i class="bi bi-plus-lg"></i> Agregar producto
+            </button>
+          </div>
+          <div class="col-12 col-sm-12">
+            <div class="table-responsive">
+              <gpa-validator-message
+                [control]="{ errors: { required: true } }"
+                [touched]="saleForm.touched && invoiceDetails.length == 0"
+                validation="required"
+                message="Debe elegir al menos un producto"
+              />
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Existencia</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="invoiceDetails">
+                  <tr
+                    *ngFor="
+                      let formProduct of invoiceDetails.controls;
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <td>{{ formProduct.get("productCode")?.value }}</td>
+                    <td>{{ formProduct.get("productName")?.value }}</td>
+                    <td>
+                      {{
+                        selectedProducts[formProduct.get("productCode")?.value]
+                          .stock
+                      }}
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="form-control"
+                        (input)="handleQuantityChange()"
+                        formControlName="quantity"
+                        style="width: 130px"
+                        [class.quantity-error]="
+                          !formProduct.get('quantity')?.valid
+                        "
+                        [inputMask]="quantityMask"
+                      />
+                    </td>
+                    <td>{{ formProduct.get("price")?.value | currency }}</td>
+                    <td>
+                      {{
+                        formProduct.get("price")?.value *
+                          formProduct.get("quantity")?.value | currency
+                      }}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-rounded"
+                        (click)="
+                          removeProductFromCatalog(
+                            i,
+                            formProduct.get('productCode')?.value
+                          )
+                        "
+                      >
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="payment-container">
+              <div
+                style="border-right: solid 1px lightgray; padding-right: 5px"
+              >
+                <p>
+                  Total a pagar bruto:
+                  {{ productCatalogAggregate.grossTotalPrice | currency }}
+                </p>
+                <p>____________________________</p>
+                <p
+                  [class.debit]="concept.isDiscount"
+                  [class.credit]="!concept.isDiscount"
+                  *ngFor="let concept of concepts"
+                >
+                  {{ concept.concept }}: {{ concept.total | currency }}
+                </p>
+                <p>____________________________</p>
+              </div>
+              <div>
+                <p>
+                  Total a pagar neto:
+                  {{ productCatalogAggregate.netTotalPrice | currency }}
+                </p>
+                <input
+                  type="text"
+                  name="payment"
+                  [value]="paymentValue.toFixed(2)"
+                  (input)="handlePayment($event)"
+                  class="form-control"
+                  style="max-width: 200px; text-align: right"
+                  [disabled]="disableForm"
+                  [inputMask]="currencyInputMask"
+                  placeholder="$ 0.00"
+                />
+                <p
+                  style="color: red"
+                  *ngIf="productCatalogAggregate.netTotalPrice - payment >= 0"
+                >
+                  Adeuda:
+                  {{
+                    (productCatalogAggregate.netTotalPrice - payment).toFixed(2)
+                      | currency
+                  }}
+                </p>
+                <p style="color: green">
+                  Devuelta: {{ productCatalogAggregate.return | currency }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- Row end -->
+      </div>
+
+      <gpa-stock-product-catalog
+        [(visible)]="isProductCatalogVisible"
+        [selectedProducts]="selectedProducts"
+        (onSelectedProduct)="handleSelectedProductFromCatalog($event)"
+      ></gpa-stock-product-catalog>
+
+      <gpa-client-catalog
+        [(visible)]="isClientCatalogVisible"
+        (onSelectedClient)="handleSelectedClient($event)"
+      ></gpa-client-catalog>
+    </div>
+    <!-- Card end -->
+  </div>
+</div>
+<!-- Row end -->

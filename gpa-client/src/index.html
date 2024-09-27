@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GpaClient</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script>
+      function coreInitMap() {
+        var initMapInterval = setInterval(() => {
+          if (window.initMap) {
+            window.initMap();
+            clearInterval(initMapInterval);
+          }
+        }, 500);
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places,marker&loading=async&callback=coreInitMap"></script>
+  </head>
+  <body>
+    <gpa-root></gpa-root>
+  </body>
+</html>

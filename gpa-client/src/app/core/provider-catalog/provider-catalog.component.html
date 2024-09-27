@@ -1,0 +1,78 @@
+<div class="provider-catalog" *ngIf="visible">
+  <div>
+    <h4>Catálogo de proveedores</h4>
+  </div>
+  <br />
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar proveedor"
+      style="margin-right: 20px"
+      (input)="handleSearch($event)"
+    />
+    <button
+      class="btn btn-outline-danger btn-rounded"
+      (click)="handleShowProviderCatalog(false)"
+    >
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  <hr />
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <ngx-spinner
+          name="provider-catalog-spinner"
+          [fullScreen]="false"
+          type="timer"
+          size="medium"
+        ></ngx-spinner>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td>Nombre</td>
+              <td>Apellido</td>
+              <td>Identificación</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let provider of providers"
+              (click)="handleSelectedProviderFromCatalog(provider)"
+              [class.selected-provider]="selectedProviders[provider.id!]"
+            >
+              <td>{{ provider.name }}</td>
+              <td>{{ provider.lastName }}</td>
+              <td>
+                {{ getIdentificationType(provider.identificationType) }}
+                {{ provider.identification }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page Navigation">
+          <ul class="pagination justify-content-end">
+            <li class="page-item" style="margin-right: 6px">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleBackwardPage()"
+              >
+                <i class="bi bi-arrow-left"></i>
+              </button>
+            </li>
+            <li class="page-item">
+              <button
+                class="btn btn-outline-info"
+                (click)="handleForwardPage()"
+              >
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

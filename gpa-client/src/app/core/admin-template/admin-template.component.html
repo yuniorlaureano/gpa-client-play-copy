@@ -1,0 +1,35 @@
+<!-- Page wrapper start -->
+<div class="page-wrapper" [class.toggled]="layoutService.toggle">
+  <gpa-toasts></gpa-toasts>
+  <!-- Sidebar wrapper start -->
+  <gpa-admin-sidebar></gpa-admin-sidebar>
+  <!-- Sidebar wrapper end -->
+
+  <!-- *************
+    ************ Main container start *************
+  ************* -->
+  <div class="main-container">
+    <!-- Page header starts -->
+    <gpa-admin-page-header></gpa-admin-page-header>
+    <!-- Page header ends -->
+
+    <!-- Content wrapper scroll start -->
+    <!-- Content wrapper start -->
+    <!-- <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div> -->
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+    <!-- Content wrapper end -->
+
+    <!-- App Footer start -->
+    <gpa-admin-page-footer></gpa-admin-page-footer>
+    <!-- App footer end -->
+    <!-- Content wrapper scroll end -->
+  </div>
+  <!-- *************
+    ************ Main container end *************
+  ************* -->
+</div>
+<!-- Page wrapper end -->

@@ -1,0 +1,62 @@
+<div class="invoice-catalog" *ngIf="visible">
+  <div>
+    <h4>Catálogo de facturas</h4>
+  </div>
+  <br />
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar facturas"
+      style="margin-right: 20px"
+    />
+    <button
+      class="btn btn-outline-danger btn-rounded"
+      (click)="handleShowInvoiceCatalog(false)"
+    >
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  <hr />
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td>Nota</td>
+          <td>Fecha</td>
+          <td>Estado</td>
+          <td>Tipo</td>
+          <td>Cliente</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let invoice of invoices"
+          (click)="handleSelectedInvoiceFromCatalog(invoice)"
+          [class.selected-invoice]="selectedInvoice?.id == invoice.id"
+        >
+          <td>{{ invoice.note }}</td>
+          <td>{{ invoice.date }}</td>
+          <td>{{ invoice.status }}</td>
+          <td>{{ invoice.type }}</td>
+          <td>{{ invoice.client?.name + " " + invoice.client?.lastName }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page Navigation">
+      <ul class="pagination justify-content-end">
+        <li class="page-item" style="margin-right: 6px">
+          <button class="btn btn-outline-info" (click)="handleBackwardPage()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </li>
+        <li class="page-item">
+          <button class="btn btn-outline-info" (click)="handleForwardPage()">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
